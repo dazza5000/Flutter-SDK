@@ -16,9 +16,9 @@ abstract class IDataStore<E> {
       int relationsDepth,
       DataQueryBuilder queryBuilder});
 
-  Future<E> findFirst({List<String> relations, int relationsDepth});
+  Future<E> findFirst({List<String> relations, int relationsDepth, int relationsPageSize});
 
-  Future<E> findLast({List<String> relations, int relationsDepth});
+  Future<E> findLast({List<String> relations, int relationsDepth, int relationsPageSize});
 
   Future<int> getObjectCount([DataQueryBuilder queryBuilder]);
 
@@ -107,25 +107,23 @@ class MapDrivenDataStore implements IDataStore<Map> {
     });
   }
 
-  Future<Map> findFirst({List<String> relations, int relationsDepth}) {
-    checkArguments({"relations": relations}, {"relationsDepth": relationsDepth},
-        isRequired: false);
+  Future<Map> findFirst({List<String> relations, int relationsDepth, int relationsPageSize}) {
     return _channel
         .invokeMethod("Backendless.Data.of.findFirst", <String, dynamic>{
       'tableName': _tableName,
       'relations': relations,
       'relationsDepth': relationsDepth,
+      'relationsPageSize': relationsPageSize,
     });
   }
 
-  Future<Map> findLast({List<String> relations, int relationsDepth}) {
-    checkArguments({"relations": relations}, {"relationsDepth": relationsDepth},
-        isRequired: false);
+  Future<Map> findLast({List<String> relations, int relationsDepth, int relationsPageSize}) {
     return _channel
         .invokeMethod("Backendless.Data.of.findLast", <String, dynamic>{
       'tableName': _tableName,
       'relations': relations,
       'relationsDepth': relationsDepth,
+      'relationsPageSize': relationsPageSize,
     });
   }
 
@@ -265,7 +263,7 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
     return reflector.deserialize<T>(mapObject);
   }
 
-  Future<T> findFirst({List<String> relations, int relationsDepth}) async {
+  Future<T> findFirst({List<String> relations, int relationsDepth, int relationsPageSize}) async {
     checkArguments({"relations": relations}, {"relationsDepth": relationsDepth},
         isRequired: false);
     Map mapObject = await _channel
@@ -273,12 +271,13 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
       'tableName': _tableName,
       'relations': relations,
       'relationsDepth': relationsDepth,
+      'relationsPageSize': relationsPageSize,
     });
 
     return reflector.deserialize<T>(mapObject);
   }
 
-  Future<T> findLast({List<String> relations, int relationsDepth}) async {
+  Future<T> findLast({List<String> relations, int relationsDepth, int relationsPageSize}) async {
     checkArguments({"relations": relations}, {"relationsDepth": relationsDepth},
         isRequired: false);
     Map mapObject = await _channel
@@ -286,6 +285,7 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
       'tableName': _tableName,
       'relations': relations,
       'relationsDepth': relationsDepth,
+      'relationsPageSize': relationsPageSize,
     });
 
     return reflector.deserialize<T>(mapObject);

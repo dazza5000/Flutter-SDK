@@ -171,11 +171,16 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
     private void findFirst(String tableName, MethodCall call, MethodChannel.Result result) {
         ArrayList<String> relations = call.argument("relations");
         Integer relationsDepth = call.argument("relationsDepth");
+        Integer relationsPageSize = call.argument("relationsPageSize");
 
         FlutterCallback<Map> callback = new FlutterCallback<>(result);
 
         if (relations != null) {
-            Backendless.Data.of(tableName).findFirst(relations, callback);
+            if (relationsDepth != null && relationsPageSize != null) {
+                Backendless.Data.of(tableName).findFirst(relations, relationsDepth, relationsPageSize, callback);
+            } else {
+                Backendless.Data.of(tableName).findFirst(relations, callback);
+            }
         } else if (relationsDepth != null) {
             Backendless.Data.of(tableName).findFirst(relationsDepth, callback);
         } else {
@@ -186,11 +191,16 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
     private void findLast(String tableName, MethodCall call, MethodChannel.Result result) {
         ArrayList<String> relations = call.argument("relations");
         Integer relationsDepth = call.argument("relationsDepth");
+        Integer relationsPageSize = call.argument("relationsPageSize");
 
         FlutterCallback<Map> callback = new FlutterCallback<>(result);
 
         if (relations != null) {
-            Backendless.Data.of(tableName).findLast(relations, callback);
+            if (relationsDepth != null && relationsPageSize != null) {
+                Backendless.Data.of(tableName).findLast(relations, relationsDepth, relationsPageSize, callback);
+            } else {
+                Backendless.Data.of(tableName).findLast(relations, callback);
+            }
         } else if (relationsDepth != null) {
             Backendless.Data.of(tableName).findLast(relationsDepth, callback);
         } else {
